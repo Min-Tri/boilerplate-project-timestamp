@@ -32,7 +32,7 @@ app.get("/api/:date?", (req, res) => {
 
   let isValidUnixNumber = /^[0-9]+$/.test(input)
 
-  let isEmpty = input == "" || input == null;
+  let isEmpty = input === "" || input === null || input === undefined;
 
   let unix_output = 0;
   let utc_output = "";
