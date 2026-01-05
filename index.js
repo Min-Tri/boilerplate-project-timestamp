@@ -24,38 +24,34 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get("/api/:date?", (req, res) => {
-  let input = req.params.date;
+app.get("/api/", (_, res) => {
+  const now = new Date();
+  res.json({
+    unix: now.getTime(),
+    utc: now.toUTCString()
+  });
+});
 
-  let isValidDate = Date.parse(input);
+app.get("/api/:date", (req, res) => {
+  const input = req.params.date;
+  let date;
 
+  if (!isNaN(input)) {
+    date = new Date(Number(input));
+  } 
 
-  let isValidUnixNumber = /^[0-9]+$/.test(input)
-
-  let isEmpty = input === "" || input === null || input === undefined;
-
-  let unix_output = 0;
-  let utc_output = "";
-
-  if (isValidDate) {
-    unix_output = new Date(input);
-    utc_output = unix_output.toUTCString();
-    return res.json({ unix: unix_output.valueOf(), utc: utc_output });
-  }
-  else if (isNaN(isValidDate) && isValidUnixNumber) {
-    unix_output = new Date(parseInt(input));
-    utc_output = unix_output.toUTCString();
-    return res.json({ unix: unix_output.valueOf(), utc: utc_output });
-  }
-  else if (isEmpty) {
-    unix_output = new Date();
-    utc_output = unix_output.toUTCString();
-    return res.json({ unix: unix_output.valueOf(), utc: utc_output });
-  }
   else {
-    res.json({ error: "Invalid Date" });
+    date = new Date(input);
   }
 
+  if (date.toString() === "Invalid Date") {
+    return res.json({ error: "Invalid Date" });
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  });
 });
 
 // Listen on port set in environment variable or default to 3000
