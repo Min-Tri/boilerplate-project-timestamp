@@ -24,7 +24,7 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get("/api/", (_, res) => {
+app.get("/api", (_, res) => {
   const now = new Date();
   res.json({
     unix: now.getTime(),
